@@ -99,7 +99,7 @@ game:GetService("UserInputService").JumpRequest:Connect(function()
 end)
 
 -- Функция для изменения скорости
-createButton("Set Speed", 150, function(button)
+createButton("Set Speed (Normall speed 16)", 150, function(button)
     createInputWindow("Введите Speed", function(value)
         if value and value > 0 then
             humanoid.WalkSpeed = value
