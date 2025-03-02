@@ -203,6 +203,11 @@ createButton("Teleport To", 500, function(button)
     createTeleportToWindow()
 end, false)
 
+-- Clear Inventory
+createButton("Clear Inventory", 550, function(button)
+    createClearInventoryWindow()
+end, false)
+
 -- Функция для создания окна ввода Lua-кода
 function createLuaExecutorWindow(titleText, callback)
     local inputGui = Instance.new("ScreenGui", player.PlayerGui)
@@ -344,3 +349,62 @@ function createInputWindow(titleText, callback)
         inputGui:Destroy()
     end)
 end
+
+-- Функция для создания окна подтверждения очистки инвентаря
+function createClearInventoryWindow()
+    local clearInventoryGui = Instance.new("ScreenGui", player.PlayerGui)
+    clearInventoryGui.Name = "ClearInventoryMenu"
+
+    local clearInventoryFrame = Instance.new("Frame", clearInventoryGui)
+    clearInventoryFrame.Size = UDim2.new(0, 200, 0, 100)
+    clearInventoryFrame.Position = UDim2.new(0.5, -100, 0.5, -50)
+    clearInventoryFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    clearInventoryFrame.Draggable = true
+    clearInventoryFrame.Active = true
+    
+    local title = Instance.new("TextLabel", clearInventoryFrame)
+    title.Text = "Точно?"
+    title.Size = UDim2.new(1, 0, 0.3, 0)
+    title.TextColor3 = Color3.new(1, 1, 1)
+    
+    local confirmButton = Instance.new("TextButton", clearInventoryFrame)
+    confirmButton.Size = UDim2.new(0.5, 0, 0.3, 0)
+    confirmButton.Position = UDim2.new(0, 0, 0.7, 0)
+    confirmButton.Text = "✓"
+    confirmButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    confirmButton.TextColor3 = Color3.new(1, 1, 1)
+    confirmButton.MouseButton1Click:Connect(function()
+        -- Очистка инвентаря
+        local backpack = player:FindFirstChild("Backpack")
+        if backpack then
+            for _, item in ipairs(backpack:GetChildren()) do
+                item:Destroy()
+            end
+        end
+        clearInventoryGui:Destroy()
+    end)
+    
+    local closeButton = Instance.new("TextButton", clearInventoryFrame)
+    closeButton.Size = UDim2.new(0.5, 0, 0.3, 0)
+    closeButton.Position = UDim2.new(0.5, 0, 0.7, 0)
+    closeButton.Text = "X"
+    closeButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    closeButton.TextColor3 = Color3.new(1, 1, 1)
+    closeButton.MouseButton1Click:Connect(function()
+        clearInventoryGui:Destroy()
+    end)
+end
+
+-- Обработчик смерти игрока
+local function onCharacterDeath()
+    -- Проверяем, существует ли ScreenGui
+    if not player.PlayerGui:FindFirstChild("AdminMenu") then
+        -- Если нет, создаем его заново
+        screenGui = Instance.new("ScreenGui", player.PlayerGui)
+        screenGui.Name = "AdminMenu"
+        -- Здесь нужно добавить код для повторного создания всех элементов GUI
+    end
+end
+
+-- Подключаем обработчик смерти
+humanoid.Died:Connect(onCharacterDeath)
