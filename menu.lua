@@ -2,17 +2,19 @@ local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local userInputService = game:GetService("UserInputService")
+local runService = game:GetService("RunService")
 
 -- Создаем GUI
 local screenGui = Instance.new("ScreenGui", player.PlayerGui)
 screenGui.Name = "AdminMenu"
 
 local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 300, 0, 600) -- Увеличиваем высоту для новых кнопок
-frame.Position = UDim2.new(0.5, -150, 0.5, -300) -- Сдвигаем позицию для новых кнопок
+frame.Size = UDim2.new(0, 300, 0, 600) -- Начальный размер
+frame.Position = UDim2.new(0.5, -150, 0.5, -300) -- Центрируем
 frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 frame.Draggable = true
 frame.Active = true
+frame.ClipsDescendants = true -- Обрезаем содержимое, если оно выходит за пределы окна
 
 -- Кнопка закрытия
 local cancelButton = Instance.new("TextButton", frame)
@@ -70,6 +72,90 @@ toggleButton.MouseButton1Click:Connect(function()
         toggleButtons(false) -- Скрываем кнопки
     end
 end)
+
+-- Функция для изменения размера окна
+local isResizing = false
+local resizeStartPosition = Vector2.new(0, 0)
+local resizeStartSize = Vector2.new(0, 0)
+
+local resizeButton = Instance.new("TextButton", frame)
+resizeButton.Text = "↔"
+resizeButton.Size = UDim2.new(0, 40, 0, 40)
+resizeButton.Position = UDim2.new(1, -40, 1, -40)
+resizeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+resizeButton.TextColor3 = Color3.new(1, 1, 1)
+
+-- Обработчик начала изменения размера
+resizeButton.MouseButton1Down:Connect(function()
+    isResizing = true
+    resizeStartPosition = userInputService:GetMouseLocation()
+    resizeStartSize = Vector2.new(frame.AbsoluteSize.X, frame.AbsoluteSize.Y)
+end)
+
+-- Обработчик изменения размера
+userInputService.InputChanged:Connect(function(input)
+    if isResizing and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local currentMousePosition = userInputService:GetMouseLocation()
+        local delta = currentMousePosition - resizeStartPosition
+        local newSize = resizeStartSize + delta
+
+        -- Устанавливаем минимальный и максимальный размер
+        newSize = Vector2.new(
+            math.clamp(newSize.X, 200, 800), -- Минимальная ширина: 200, максимальная: 800
+            math.clamp(newSize.Y, 100, 1200) -- Минимальная высота: 100, максимальная: 1200
+        )
+
+        frame.Size = UDim2.new(0, newSize.X, 0, newSize.Y)
+    end
+end)
+
+-- Обработчик окончания изменения размера
+userInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        isResizing = false
+    end
+end)
+
+-- Обработчик жестов для мобильных устройств
+local touchStartPositions = {}
+local touchStartSize = Vector2.new(0, 0)
+
+userInputService.TouchStarted:Connect(function(touch)
+    if #touchStartPositions < 2 then
+        table.insert(touchStartPositions, touch.Position)
+        if #touchStartPositions == 2 then
+            touchStartSize = Vector2.new(frame.AbsoluteSize.X, frame.AbsoluteSize.Y)
+        end
+    end
+end)
+
+userInputService.TouchEnded:Connect(function(touch)
+    touchStartPositions = {}
+end)
+
+userInputService.TouchMoved:Connect(function(touch)
+    if #touchStartPositions == 2 then
+        local currentPositions = {
+            userInputService:GetTouchLocation(touchStartPositions[1].Key),
+            userInputService:GetTouchLocation(touchStartPositions[2].Key)
+        }
+
+        local startDistance = (touchStartPositions[1] - touchStartPositions[2]).Magnitude
+        local currentDistance = (currentPositions[1] - currentPositions[2]).Magnitude
+
+        local scaleFactor = currentDistance / startDistance
+        local newSize = touchStartSize * scaleFactor
+
+        -- Устанавливаем минимальный и максимальный размер
+        newSize = Vector2.new(
+            math.clamp(newSize.X, 200, 800), -- Минимальная ширина: 200, максимальная: 800
+            math.clamp(newSize.Y, 100, 1200) -- Минимальная высота: 100, максимальная: 1200
+        )
+
+        frame.Size = UDim2.new(0, newSize.X, 0, newSize.Y)
+    end
+end)
+
 
 -- Tp Tool
 createButton("Tp Tool", 50, function(button)
