@@ -8,8 +8,8 @@ local screenGui = Instance.new("ScreenGui", player.PlayerGui)
 screenGui.Name = "AdminMenu"
 
 local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 300, 0, 600) -- Исходный размер меню
-frame.Position = UDim2.new(0.5, -150, 0.5, -300)
+frame.Size = UDim2.new(0, 300, 0, 600) -- Увеличиваем высоту для новых кнопок
+frame.Position = UDim2.new(0.5, -150, 0.5, -300) -- Сдвигаем позицию для новых кнопок
 frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 frame.Draggable = true
 frame.Active = true
@@ -344,41 +344,3 @@ function createInputWindow(titleText, callback)
         inputGui:Destroy()
     end)
 end
-
--- Добавляем флажки для режимов
-local telephoneModeCheckbox = Instance.new("TextButton", frame)
-telephoneModeCheckbox.Text = "Telephone Mode"
-telephoneModeCheckbox.Size = UDim2.new(0.5, -10, 0, 30)
-telephoneModeCheckbox.Position = UDim2.new(0, 5, 1, -60)
-telephoneModeCheckbox.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-telephoneModeCheckbox.TextColor3 = Color3.new(1, 1, 1)
-telephoneModeCheckbox.MouseButton1Click:Connect(function()
-    -- Уменьшаем меню в 3 раза (и ширину, и высоту)
-    frame.Size = UDim2.new(0, 100, 0, 200)
-    -- Уменьшаем размер кнопок
-    for _, button in pairs(buttons) do
-        button.Size = UDim2.new(1, -20, 0, 20)
-    end
-    telephoneModeCheckbox.Visible = false
-    pcModeCheckbox.Visible = true
-end)
-
-local pcModeCheckbox = Instance.new("TextButton", frame)
-pcModeCheckbox.Text = "PC Mode"
-pcModeCheckbox.Size = UDim2.new(0.5, -10, 0, 30)
-pcModeCheckbox.Position = UDim2.new(0.5, 5, 1, -60)
-pcModeCheckbox.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
-pcModeCheckbox.TextColor3 = Color3.new(1, 1, 1)
-pcModeCheckbox.MouseButton1Click:Connect(function()
-    -- Возвращаем меню к исходному размеру
-    frame.Size = UDim2.new(0, 300, 0, 600)
-    -- Возвращаем размер кнопок
-    for _, button in pairs(buttons) do
-        button.Size = UDim2.new(1, -20, 0, 40)
-    end
-    telephoneModeCheckbox.Visible = true
-    pcModeCheckbox.Visible = false
-end)
-
--- Изначально показываем только флажок "Telephone Mode"
-pcModeCheckbox.Visible = false
