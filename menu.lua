@@ -9,7 +9,7 @@ local screenGui = Instance.new("ScreenGui", player.PlayerGui)
 screenGui.Name = "AdminMenu"
 
 local frame = Instance.new("Frame", screenGui)
-frame.Size = UDim2.new(0, 300, 0, 600) -- Начальный размер
+frame.Size = UDim2.new(0, 200, 0, 650) -- Начальный размер
 frame.Position = UDim2.new(0.5, -150, 0.5, -300) -- Центрируем
 frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 frame.Draggable = true
@@ -269,8 +269,35 @@ createButton("FaceTroll", 400, function(button)
     end
 end, false)
 
+-- Кнопка "Jerk off"
+createButton("Jerk off", 450, function(button)
+    local success1, message1 = pcall(function()
+        loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))()
+    end)
+    
+    local success2, message2 = pcall(function()
+        loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+    end)
+    
+    if not success1 then
+        warn("Ошибка при загрузке первого скрипта Jerk off: " .. message1)
+    else
+        print("Первый скрипт Jerk off успешно загружен!")
+    end
+    
+    if not success2 then
+        warn("Ошибка при загрузке второго скрипта Jerk off: " .. message2)
+    else
+        print("Второй скрипт Jerk off успешно загружен!")
+    end
+    
+    if success1 or success2 then
+        button.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
+    end
+end, false)
+
 -- Lua Executor
-createButton("Lua Executor", 450, function(button)
+createButton("Lua Executor", 500, function(button)
     createLuaExecutorWindow("Введите Lua-код", function(code)
         local func, err = loadstring(code)
         if func then
@@ -285,12 +312,12 @@ createButton("Lua Executor", 450, function(button)
 end, false)
 
 -- Teleport To
-createButton("Teleport To", 500, function(button)
+createButton("Teleport To", 550, function(button)
     createTeleportToWindow()
 end, false)
 
 -- Clear Inventory
-createButton("Clear Inventory", 550, function(button)
+createButton("Clear Inventory", 600, function(button)
     createClearInventoryWindow()
 end, false)
 
