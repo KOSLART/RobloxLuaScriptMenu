@@ -109,7 +109,6 @@ userInputService.InputChanged:Connect(function(input)
     end
 end)
 
-Koslart, [19.07.2025 15:01]
 -- Обработчик окончания изменения размера
 userInputService.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -214,7 +213,6 @@ createButton("Infinite Yield", 200, function(button)
     end
 end, false)
 
-Koslart, [19.07.2025 15:01]
 -- Кнопка "Tornado"
 createButton("Tornado", 250, function(button)
     local success, message = pcall(function()
@@ -323,7 +321,6 @@ createButton("Clear Inventory", 600, function(button)
     createClearInventoryWindow()
 end, false)
 
-Koslart, [19.07.2025 15:01]
 -- Функция для создания окна ввода Lua-кода
 function createLuaExecutorWindow(titleText, callback)
     local inputGui = Instance.new("ScreenGui", player.PlayerGui)
@@ -407,7 +404,6 @@ function createTeleportToWindow()
     local buttonHeight = 30
     playerList.CanvasSize = UDim2.new(0, 0, 0, #players * buttonHeight)
 
-Koslart, [19.07.2025 15:01]
 for i, plr in ipairs(players) do
         if plr ~= player then
             local playerButton = Instance.new("TextButton", playerList)
